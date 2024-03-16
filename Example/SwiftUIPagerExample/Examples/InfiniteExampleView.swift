@@ -50,6 +50,7 @@ struct InfiniteExampleView: View {
                             }
                         }
                     })
+                    .allowedDragDirections(.backward)
                     .pagingPriority(.simultaneous)
                     .preferredItemSize(CGSize(width: 200, height: 100))
                     .itemSpacing(10)
