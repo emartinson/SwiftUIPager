@@ -159,6 +159,7 @@ extension Pager {
         /// DragGesture state to indicate whether the gesture was interrupted
         @GestureState var isGestureFinished = true
         #endif
+        @State private var lastDragTranslation: Double = 0
 
         #if os(watchOS)
 
@@ -330,11 +331,15 @@ extension Pager.PagerContent {
                 state = false
             }
             .onChanged({ value in
-                if dragTranslation(for: value).width < 0, allowedDragDirection == .all || allowedDragDirection == .backward {
-                    self.onDragChanged(with: value)
-                } else if dragTranslation(for: value).width > 0, allowedDragDirection == .all || allowedDragDirection == .forward {
+                let translation = dragTranslation(for: value).width
+
+                if allowedDragDirection == .all ||
+                    allowedDragDirection == .backward && translation > lastDragTranslation ||
+                    allowedDragDirection == .forward && translation < lastDragTranslation {
                     self.onDragChanged(with: value)
                 }
+                // this is necessary if case when for example only forward drag is allowed user may drag forward and then backward - drag may finish dragging on the previous page which is not allowed by gesture
+                lastDragTranslation = translation
             })
     }
 

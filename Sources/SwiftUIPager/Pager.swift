@@ -219,6 +219,7 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
                 .padding(sideInsets)
                 .pagingAnimation(pagingAnimation)
                 .partialPagination(pageRatio)
+                .allowedDragDirections(allowedDragDirection)
 
         #if !os(tvOS)
           pagerContent = pagerContent
@@ -232,7 +233,6 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
             .onDraggingEnded(onDraggingEnded)
             .bounces(bounces)
             .draggingAnimation(draggingAnimation)
-            .allowedDragDirections(.all)
         #else
         pagerContent = pagerContent.draggingAnimation(draggingAnimation)
         #endif
