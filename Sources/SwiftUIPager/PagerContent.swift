@@ -334,8 +334,8 @@ extension Pager.PagerContent {
                 let translation = dragTranslation(for: value).width
 
                 if allowedDragDirection == .all ||
-                    allowedDragDirection == .backward && translation > lastDragTranslation ||
-                    allowedDragDirection == .forward && translation < lastDragTranslation {
+                    allowedDragDirection == .backward && translation > 0 ||
+                    allowedDragDirection == .forward && translation < 0 {
                     self.onDragChanged(with: value)
                 }
                 // this is necessary if case when for example only forward drag is allowed user may drag forward and then backward - drag may finish dragging on the previous page which is not allowed by gesture
