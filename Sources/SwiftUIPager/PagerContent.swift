@@ -78,7 +78,11 @@ extension Pager {
         var alignment: PositionAlignment = .center
 
         /// Swiping back is disabled
+        @available(*, deprecated, message: "Use `allowedDragDirection` instead")
         var dragForwardOnly: Bool = false
+
+        /// Allowed Swiping direction. `all` by default
+        var allowedDragDirection: AllowedSwipeDirection = .all
 
         /// `true` if the pager is horizontal
         var isHorizontal: Bool = true
@@ -295,14 +299,20 @@ extension Pager.PagerContent {
       let animation = self.draggingAnimation.animation ?? .default
         switch (command, isHorizontal) {
         case (.left, true):
-            guard !dragForwardOnly else { return }
+            let allowed = allowedDragDirection == .all || allowedDragDirection == .backward
+            guard allowed else { return }
             withAnimation(animation) { self.pagerModel.update(.previous) }
         case (.right, true):
+            let allowed = allowedDragDirection == .all || allowedDragDirection == .forward
+            guard allowed else { return }
             withAnimation(animation) { self.pagerModel.update(.next) }
         case (.up, false):
-            guard !dragForwardOnly else { return }
+            let allowed = allowedDragDirection == .all || allowedDragDirection == .backward
+            guard allowed else { return }
             withAnimation(animation) { self.pagerModel.update(.previous) }
         case (.down, false):
+            let allowed = allowedDragDirection == .all || allowedDragDirection == .forward
+            guard allowed else { return }
             withAnimation(animation) { self.pagerModel.update(.next) }
         case (.down, true), (.up, true), (.left, false), (.right, false):
             break
@@ -320,7 +330,9 @@ extension Pager.PagerContent {
                 state = false
             }
             .onChanged({ value in
-                if !dragForwardOnly || dragTranslation(for: value).width < 0 {
+                if dragTranslation(for: value).width < 0, allowedDragDirection == .all || allowedDragDirection == .backward {
+                    self.onDragChanged(with: value)
+                } else if dragTranslation(for: value).width > 0, allowedDragDirection == .all || allowedDragDirection == .forward {
                     self.onDragChanged(with: value)
                 }
             })

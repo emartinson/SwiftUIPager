@@ -78,6 +78,13 @@ extension Pager: Buildable {
         mutating(keyPath: \.dragForwardOnly, value: value)
     }
 
+    /// User can only swipe in the specified direction
+    ///
+    /// - Parameter allowedDragDirection: by default all directions are allowed so pages can be scrolled in both directions,
+    func allowedDragDirections(_ value: AllowedSwipeDirection = .all) -> Self {
+        mutating(keyPath: \.allowedDragDirection, value: value)
+    }
+
     /// Sets the explicit animation to be used. Defaults to `.standard`
     ///
     /// - Parameter anim1: animation to use while dragging

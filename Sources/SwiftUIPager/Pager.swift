@@ -97,7 +97,11 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
     var alignment: PositionAlignment = .center
 
     /// Swiping back is disabled
+    @available(*, deprecated, message: "Use `allowedDragDirection` instead")
     var dragForwardOnly: Bool = false
+
+    /// Allowed Swiping direction. `all` by default
+    var allowedDragDirection: AllowedSwipeDirection = .all
 
     /// `true` if the pager is horizontal
     var isHorizontal: Bool = true
@@ -228,7 +232,7 @@ public struct Pager<Element, ID, PageView>: View  where PageView: View, Element:
             .onDraggingEnded(onDraggingEnded)
             .bounces(bounces)
             .draggingAnimation(draggingAnimation)
-            .dragForwardOnly(dragForwardOnly)
+            .allowedDragDirections(.all)
         #else
         pagerContent = pagerContent.draggingAnimation(draggingAnimation)
         #endif
